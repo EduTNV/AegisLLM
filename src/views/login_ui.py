@@ -15,4 +15,3 @@ def tela_login():
             else: 
                 st.error("Credenciais inválidas.")
     
-    st.info("Credenciais POC: admin@empresa.com / admin123 | joao@empresa.com / user123")
