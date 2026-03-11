@@ -17,12 +17,12 @@ def tela_admin():
     
     c1, c2 = st.columns([2, 1.5])
     with c1:
-        st.subheader("📊 Consumo")
+        st.subheader("📊Consumo")
         data = {u: st.session_state.finops["gastos_usuarios"].get(u, 0.0) for u in st.session_state.db_users if u != ADMIN_EMAIL}
         st.bar_chart(pd.Series(data))
 
     with c2:
-        st.subheader("💰 Gestão de Orçamentos")
+        st.subheader("Gestão de Orçamentos")
         g_lim = st.number_input("Limite Global ($)", value=float(st.session_state.finops["limite_diario_global"]), step=0.01, min_value=0.01)
         if st.button("Salvar Limite Global"):
             st.session_state.finops["limite_diario_global"] = g_lim
@@ -47,5 +47,5 @@ def tela_admin():
                 registar_log(ADMIN_EMAIL, "Aprovação FinOps", f"Limite aumentado para {p_email}")
                 st.rerun()
 
-    st.subheader("📜 Logs de Auditoria")
+    st.subheader("Logs de Auditoria")
     st.dataframe(pd.DataFrame(reversed(st.session_state.audit_logs)), use_container_width=True)

@@ -2,7 +2,7 @@ import streamlit as st
 from src.security.auth import verificar_senha
 
 def tela_login():
-    st.title("🛡️ AegisLLM - Login")
+    st.title("AegisLLM - Login")
     with st.form("l"):
         e = st.text_input("E-mail")
         p = st.text_input("Senha", type="password")

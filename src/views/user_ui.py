@@ -6,7 +6,7 @@ from src.security.auth import registar_log
 
 def tela_usuario():
     email = st.session_state.current_user
-    st.title("💬 AegisLLM - Terminal Seguro")
+    st.title("AegisLLM - Terminal Seguro")
     
     if email not in st.session_state.finops["gastos_usuarios"]:
         st.session_state.finops["gastos_usuarios"][email] = 0.0
@@ -17,12 +17,12 @@ def tela_usuario():
     limite_atual = obter_limite_usuario(email)
     saldo = limite_atual - gasto_atual
     
-    bloqueado = saldo < 0.015
+    bloqueado = saldo < 0.001
 
     st.progress(min(gasto_atual/limite_atual, 1.0) if limite_atual > 0 else 0, text=f"Consumo: ${gasto_atual:.4f} / ${limite_atual:.4f}")
 
     if bloqueado:
-        st.error(f"⚠️ Orçamento insuficiente (${saldo:.4f}).")
+        st.error(f"Orçamento insuficiente (${saldo:.4f}).")
         if email not in st.session_state.finops["solicitacoes_limite"]:
             if st.button("Pedir Aumento"):
                 st.session_state.finops["solicitacoes_limite"].append(email)
@@ -41,18 +41,18 @@ def tela_usuario():
         with st.chat_message("user"): st.markdown(prompt)
 
         p_sani, pii = sanitizar_prompt(prompt, email)
-        if pii: st.toast("🛡️ Dados sensíveis tokenizados!")
+        if pii: st.toast("Dados sensíveis tokenizados!")
 
         custo_estimado_input = calcular_custo(p_sani, "")
         if (gasto_atual + custo_estimado_input) > limite_atual:
-            st.error(f"❌ O tamanho do texto inserido (estimativa: ${custo_estimado_input:.4f}) ultrapassa o seu saldo restante (${saldo:.4f}).")
+            st.error(f"O tamanho do texto inserido (estimativa: ${custo_estimado_input:.4f}) ultrapassa o seu saldo restante (${saldo:.4f}).")
             st.stop()
             
         resposta_ia = obter_cache(p_sani)
         
         with st.chat_message("assistant"):
             if resposta_ia:
-                msg_ai = f"⚡ *Cache Semântico ($0.00)*\n\n---\n\n{resposta_ia}"
+                msg_ai = f" *Cache Semântico ($0.00)*\n\n---\n\n{resposta_ia}"
                 st.markdown(msg_ai)
                 registar_log(email, "Poupança FinOps", "Cache Semântico utilizado")
             else:
@@ -66,7 +66,7 @@ def tela_usuario():
                     
                     guardar_cache(p_sani, resp_final)
                     
-                    msg_ai = f"💰 *Custo: ${custo:.4f}* | 🛡️ *Visão IA:* `{p_sani}`\n\n---\n\n{resp_final}"
+                    msg_ai = f"*Custo: ${custo:.4f}* | *Visão IA:* `{p_sani}`\n\n---\n\n{resp_final}"
                     st.markdown(msg_ai)
 
         st.session_state.chat_history[email].append({"role": "assistant", "content": msg_ai})
