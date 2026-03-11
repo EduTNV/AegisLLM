@@ -1,0 +1,10 @@
+# Ambientes Virtuais
+venv/
+env/
+
+# Chaves e Segredos (CRÍTICO)
+.env
+
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
